@@ -11,12 +11,13 @@ namespace BypassList
         private readonly object locker = new ();
         private readonly Dictionary<int, IRule> departments;
         private readonly Dictionary<int, List<HashSet<int>>> departmentsStates;
-        private HashSet<int> seals;
+        private readonly HashSet<int> seals;
         private bool containsLoop;
         private bool bypassIsDone;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BypassList"/> class.
+        /// Dictionary should include all the departments indexed from 1 to the Dictionary's size.
         /// </summary>
         private BypassList(Dictionary<int, IRule> departments)
         {
@@ -79,7 +80,6 @@ namespace BypassList
                 }
 
                 departmentIndex = departments[departmentIndex].Next(seals);
-                seals = departments[departmentIndex].Seals!;
             }
 
             SetDepartmentState(departmentIndex);
@@ -90,7 +90,6 @@ namespace BypassList
         {
             var department = departments[departmentIndex];
             department.Next(seals);
-            seals = departments[departmentIndex].Seals!;
 
             if (departmentsStates.ContainsKey(departmentIndex))
             {
