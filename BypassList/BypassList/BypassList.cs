@@ -13,7 +13,7 @@ namespace BypassList
         private readonly Dictionary<int, List<HashSet<int>>> departmentsStates;
         private HashSet<int> seals;
         private bool containsLoop;
-        private bool bypassIsDone = false;
+        private bool bypassIsDone;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BypassList"/> class.
@@ -78,7 +78,8 @@ namespace BypassList
                     return;
                 }
 
-                departmentIndex = departments[departmentIndex].Next(ref seals);
+                departmentIndex = departments[departmentIndex].Next(seals);
+                seals = departments[departmentIndex].Seals!;
             }
 
             SetDepartmentState(departmentIndex);
@@ -88,15 +89,14 @@ namespace BypassList
         private void SetDepartmentState(int departmentIndex)
         {
             var department = departments[departmentIndex];
-            department.Next(ref seals);
+            department.Next(seals);
+            seals = departments[departmentIndex].Seals!;
 
             if (departmentsStates.ContainsKey(departmentIndex))
             {
                 if (departmentsStates[departmentIndex].Contains(seals))
                 {
                     containsLoop = true;
-
-                    return;
                 }
                 else
                 {

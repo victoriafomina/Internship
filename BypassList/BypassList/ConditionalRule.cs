@@ -31,14 +31,20 @@ namespace BypassList
         }
 
         /// <summary>
+        /// Gets the seals.
+        /// </summary>
+        public HashSet<int>? Seals { get; private set; } = null;
+
+        /// <summary>
         /// Seals and returns the index of the next department.
         /// </summary>
-        public int Next(ref HashSet<int> seals)
+        public int Next(HashSet<int> seals)
         {
             if (seals.Contains(sealToCheck))
             {
                 seals.Add(sealToSealIfCheckedContains);
                 seals.Remove(sealToCrossOutIfCheckedContains);
+                Seals = seals;
 
                 return nextDepartmentIfCheckedContains;
             }

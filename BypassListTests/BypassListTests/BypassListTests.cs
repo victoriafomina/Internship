@@ -11,41 +11,41 @@ namespace BypassListTests
         {
             new object[]
             {
-                new Dictionary<int, IRule>()
+                new Dictionary<int, IRule>
                 {
                     [1] = new UnconditionalRule(1, 2, 2),
                     [2] = new UnconditionalRule(2, 2, 1)
                 },
                 1,
-                (false, new List<HashSet<int>>() { new HashSet<int>() { 1 } })
+                (false, new List<HashSet<int>>() { new HashSet<int> { 1 } })
             },
 
             new object[]
             {
-                new Dictionary<int, IRule>()
+                new Dictionary<int, IRule>
                 {
                     [1] = new UnconditionalRule(1, 2, 2),
                     [2] = new UnconditionalRule(2, 2, 1)
                 },
                 2,
-                (false, new List<HashSet<int>>() { new HashSet<int>() { 1 } })
+                (false, new List<HashSet<int>>() { new HashSet<int> { 1 } })
             },
 
             new object[]
             {
-                new Dictionary<int, IRule>()
+                new Dictionary<int, IRule>
                 {
                     [1] = new UnconditionalRule(1, 2, 2),
                     [2] = new UnconditionalRule(2, 2, 1),
                     [3] = new UnconditionalRule(1, 2, 1)
                 },
                 2,
-                (true, new List<HashSet<int>>() { new HashSet<int>() { 1 } })
+                (true, new List<HashSet<int>>() { new HashSet<int> { 1 } })
             },
 
             new object[]
             {
-                new Dictionary<int, IRule>()
+                new Dictionary<int, IRule>
                 {
                     [1] = new UnconditionalRule(1, 2, 2),
                     [2] = new UnconditionalRule(2, 2, 1),
@@ -57,7 +57,7 @@ namespace BypassListTests
 
             new object[]
             {
-                new Dictionary<int, IRule>()
+                new Dictionary<int, IRule>
                 {
                     [1] = new UnconditionalRule(1, 1, 2),
                     [2] = new UnconditionalRule(2, 2, 1),
