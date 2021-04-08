@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace BypassList
@@ -29,15 +30,8 @@ namespace BypassList
         /// <summary>
         /// Creates an instance of the <see cref="BypassList"/> class.
         /// </summary>
-        public static BypassList? BypassListCreator(Dictionary<int, IRule> departments)
-        {
-            if (!CheckDepartmentsIndexesAreCorrect(departments))
-            {
-                return null;
-            }
-
-            return new BypassList(departments);
-        }
+        public static BypassList? BypassListCreator(Dictionary<int, IRule> departments) =>
+                !CheckDepartmentsIndexesAreCorrect(departments) ? null : new BypassList(departments);
 
         /// <summary>
         /// Returns the uncrossed seals after the user leaves the corresponding department.
@@ -68,13 +62,13 @@ namespace BypassList
         /// </summary>
         private void RunBypass()
         {
-            int departmentIndex = 1;
+            var departmentIndex = 1;
 
             while (departmentIndex != departments.Count)
             {
                 SetDepartmentState(departmentIndex);
 
-                if (containsLoop == true)
+                if (containsLoop)
                 {
                     return;
                 }
@@ -104,10 +98,7 @@ namespace BypassList
             }
             else
             {
-                var departmentState = new List<HashSet<int>>
-                {
-                    seals,
-                };
+                var departmentState = new List<HashSet<int>> { seals };
 
                 departmentsStates.Add(departmentIndex, departmentState);
             }
@@ -122,15 +113,7 @@ namespace BypassList
 
             var indexes = departments.Keys;
 
-            foreach (var index in indexes)
-            {
-                if (index < 1 || index > indexes.Count)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return indexes.All(index => index >= 1 && index <= indexes.Count);
         }
     }
 }

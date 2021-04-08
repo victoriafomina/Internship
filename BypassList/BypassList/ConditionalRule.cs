@@ -7,48 +7,46 @@ namespace BypassList
     /// </summary>
     public class ConditionalRule : IRule
     {
-        private readonly int sealToCheck;
-        private readonly int sealToSealIfCheckedContains;
-        private readonly int sealToCrossOutIfCheckedContains;
+        private readonly int toCheck;
+        private readonly int toSealIfCheckedContains;
+        private readonly int toCrossOutIfCheckedContains;
         private readonly int nextDepartmentIfCheckedContains;
-        private readonly int sealToSealIfCheckedDoesNotContain;
-        private readonly int sealToCrossOutIfCheckedDoesNotContain;
+        private readonly int toSealIfCheckedDoesNotContain;
+        private readonly int toCrossOutIfCheckedDoesNotContain;
         private readonly int nextDepartmentIfCheckedDoesNotContain;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConditionalRule"/> class.
         /// </summary>
-        public ConditionalRule(int sealToCheck, int sealToSealIfCheckedContains, int sealToCrossOutIfCheckedContains, int nextDepartmentIfCheckedContains,
-                int sealToSealIfCheckedDoesNotContain, int sealToCrossOutIfCheckedDoesNotContain, int nextDepartmentIfCheckedDoesNotContain)
+        public ConditionalRule(int toCheck, int toSealIfCheckedContains, int toCrossOutIfCheckedContains, int nextDepartmentIfCheckedContains,
+                int toSealIfCheckedDoesNotContain, int toCrossOutIfCheckedDoesNotContain, int nextDepartmentIfCheckedDoesNotContain)
         {
-            this.sealToCheck = sealToCheck;
-            this.sealToSealIfCheckedContains = sealToSealIfCheckedContains;
-            this.sealToCrossOutIfCheckedContains = sealToCrossOutIfCheckedContains;
-            this.sealToSealIfCheckedDoesNotContain = sealToSealIfCheckedDoesNotContain;
+            this.toCheck = toCheck;
+            this.toSealIfCheckedContains = toSealIfCheckedContains;
+            this.toCrossOutIfCheckedContains = toCrossOutIfCheckedContains;
+            this.toSealIfCheckedDoesNotContain = toSealIfCheckedDoesNotContain;
             this.nextDepartmentIfCheckedContains = nextDepartmentIfCheckedContains;
-            this.sealToCrossOutIfCheckedDoesNotContain = sealToCrossOutIfCheckedDoesNotContain;
+            this.toCrossOutIfCheckedDoesNotContain = toCrossOutIfCheckedDoesNotContain;
             this.nextDepartmentIfCheckedDoesNotContain = nextDepartmentIfCheckedDoesNotContain;
         }
 
         /// <summary>
         /// Seals and returns the index of the next department.
         /// </summary>
-        public int Next(HashSet<int> seals)
+        public int Next(HashSet<int> seales)
         {
-            if (seals.Contains(sealToCheck))
+            if (seales.Contains(toCheck))
             {
-                seals.Add(sealToSealIfCheckedContains);
-                seals.Remove(sealToCrossOutIfCheckedContains);
+                seales.Add(toSealIfCheckedContains);
+                seales.Remove(toCrossOutIfCheckedContains);
 
                 return nextDepartmentIfCheckedContains;
             }
-            else
-            {
-                seals.Add(sealToSealIfCheckedDoesNotContain);
-                seals.Remove(sealToCrossOutIfCheckedDoesNotContain);
 
-                return nextDepartmentIfCheckedDoesNotContain;
-            }
+            seales.Add(toSealIfCheckedDoesNotContain);
+            seales.Remove(toCrossOutIfCheckedDoesNotContain);
+
+            return nextDepartmentIfCheckedDoesNotContain;
         }
     }
 }

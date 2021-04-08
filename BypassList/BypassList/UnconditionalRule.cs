@@ -7,27 +7,27 @@ namespace BypassList
     /// </summary>
     public class UnconditionalRule : IRule
     {
-        private readonly int sealToSeal;
-        private readonly int sealToCrossOut;
+        private readonly int toSeal;
+        private readonly int toCrossOut;
         private readonly int nextDepartment;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnconditionalRule"/> class.
         /// </summary>
-        public UnconditionalRule(int sealToSeal, int sealToCrossOut, int nextDepartment)
+        public UnconditionalRule(int toSeal, int toCrossOut, int nextDepartment)
         {
-            this.sealToSeal = sealToSeal;
-            this.sealToCrossOut = sealToCrossOut;
+            this.toSeal = toSeal;
+            this.toCrossOut = toCrossOut;
             this.nextDepartment = nextDepartment;
         }
 
         /// <summary>
-        /// Seals and returns the index of the next department.
+        /// Seales and returns the index of the next department.
         /// </summary>
-        public int Next(HashSet<int> seals)
+        public int Next(HashSet<int> seales)
         {
-            seals.Add(sealToSeal);
-            seals.Remove(sealToCrossOut);
+            seales.Add(toSeal);
+            seales.Remove(toCrossOut);
 
             return nextDepartment;
         }

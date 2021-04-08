@@ -14,12 +14,14 @@ namespace BypassListTests
         /// <summary>
         /// Tests BypassList (one threaded test)..
         /// </summary>
-        [TestCaseSource("UnconditionalRulesSimpleTestCases")]
-        [TestCaseSource("MixedRulesSimpleTestCases")]
+        [TestCaseSource(nameof(UnconditionalRulesSimpleTestCases))]
+        [TestCaseSource(nameof(MixedRulesSimpleTestCases))]
         public void OneThreadedTest(Dictionary<int, IRule> departments, int departmentIndex,
                 (bool, List<HashSet<int>>?) seales)
         {
             var bypass = BypassList.BypassList.BypassListCreator(departments);
+            Assert.NotNull(bypass);
+
             var sealesResult = bypass.UncrossedSeals(departmentIndex);
 
             Assert.IsTrue(CheckPairsAreTheSame(seales, sealesResult));
@@ -29,13 +31,14 @@ namespace BypassListTests
         /// <summary>
         /// Tests BypassList (multithreaded test).
         /// </summary>
-        [TestCaseSource("UnconditionalRulesSimpleTestCases")]
-        [TestCaseSource("MixedRulesSimpleTestCases")]
+        [TestCaseSource(nameof(UnconditionalRulesSimpleTestCases))]
+        [TestCaseSource(nameof(MixedRulesSimpleTestCases))]
         public void MultithreadedTest(Dictionary<int, IRule> departments, int departmentIndex,
                 (bool, List<HashSet<int>>?) seales)
         {
             var threads = new List<Thread>();
             var bypass = BypassList.BypassList.BypassListCreator(departments);
+            Assert.NotNull(bypass);
 
             for (var i = 0; i < 100; ++i)
             {
@@ -65,7 +68,7 @@ namespace BypassListTests
                 return false;
             }
 
-            if (expected.Item2 == null && actual.Item2 == null)
+            if (expected.Item2 == null)
             {
                 return true;
             }
@@ -96,7 +99,7 @@ namespace BypassListTests
                     [2] = new UnconditionalRule(2, 2, 1)
                 },
                 1,
-                (false, new List<HashSet<int>> { new HashSet<int> { 1 } })
+                (false, new List<HashSet<int>> { new() { 1 } })
             },
 
             new object[]
@@ -107,7 +110,7 @@ namespace BypassListTests
                     [2] = new UnconditionalRule(2, 2, 1)
                 },
                 2,
-                (false, new List<HashSet<int>> { new HashSet<int> { 1 } })
+                (false, new List<HashSet<int>> { new() { 1 } })
             },
 
             new object[]
@@ -119,7 +122,7 @@ namespace BypassListTests
                     [3] = new UnconditionalRule(1, 2, 1)
                 },
                 2,
-                (true, new List<HashSet<int>> { new HashSet<int> { 1 } })
+                (true, new List<HashSet<int>> { new() { 1 } })
             },
 
             new object[]
@@ -143,7 +146,7 @@ namespace BypassListTests
                     [3] = new UnconditionalRule(1, 2, 1)
                 },
                 1,
-                (true, new List<HashSet<int>> { new HashSet<int>() })
+                (true, new List<HashSet<int>> { new () })
             },
             
         };
@@ -159,7 +162,7 @@ namespace BypassListTests
                     [3] = new ConditionalRule(2, 2, 3, 1, 4, 5, 1)
                 },
                 1,
-                (false, new List<HashSet<int>> { new HashSet<int> { 4 } })
+                (false, new List<HashSet<int>> { new() { 4 } })
             },
 
             new object[]
@@ -183,7 +186,7 @@ namespace BypassListTests
                     [3] = new ConditionalRule(2, 2, 3, 1, 5, 4, 1)
                 },
                 3,
-                (false, new List<HashSet<int>> { new HashSet<int> { 5 } })
+                (false, new List<HashSet<int>> { new() { 5 } })
             },
         };
     }
