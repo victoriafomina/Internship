@@ -1,0 +1,134 @@
+<Window x:Class="GUIForFTP.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+
+    <Window.Resources>
+        <DataTemplate x:Key="listViewElementTemplate">
+            <StackPanel Margin="5">
+                <TextBlock FontSize="16" Text="{Binding Path=ElementInFolder.Item1}" HorizontalAlignment="Center" />
+                <TextBlock FontSize="16" Text="{Binding Path=ElementInFolder.Item2}" HorizontalAlignment="Center" />
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+
+    <StackPanel>
+        <Grid Height="70" VerticalAlignment="Top" Margin="0, 15, 0, 0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="0.9*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock 
+                Text="Server:"
+                Grid.Column="0"
+                Grid.Row="0"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Margin="85, 0, 0, 0">                
+            </TextBlock>
+            <TextBox 
+                x:Name="server" 
+                Grid.Row="1"
+                Grid.Column="0" 
+                Text="{Binding Path=Server, TargetNullValue='127.0.0.1', UpdateSourceTrigger=PropertyChanged}"    
+                Background="LightPink" 
+                Height="20" 
+                Width="150">
+            </TextBox>
+            <TextBlock 
+                Text="Port:"
+                Grid.Column="1"
+                Grid.Row="0"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center">
+            </TextBlock>
+            <TextBox 
+                x:Name="port" 
+                Grid.Row="1"
+                Grid.Column="1" 
+                Text="{Binding Path=Port, TargetNullValue='6666', UpdateSourceTrigger=PropertyChanged}"
+                Background="LightPink" 
+                Margin="0, 0, 85, 0"
+                Height="20" 
+                Width="150">
+            </TextBox>
+            <Button
+                x:Name="connect" 
+                Grid.Row="1"
+                Grid.Column="2" 
+                Background="HotPink" 
+                Height="30" 
+                Width="60"
+                Command="{Binding ConnectCommand}">
+                <TextBlock Text="Connect" />
+            </Button>
+        </Grid>
+        <Grid>
+            <TextBlock 
+                Text="List of files and folders in current directory" 
+                Padding="0, 25, 0, 0" 
+                HorizontalAlignment="Center">
+            </TextBlock>
+        </Grid>
+        <Grid Height="100">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="8*" />
+            </Grid.ColumnDefinitions>
+            <Button
+                x:Name="folderUp" 
+                Grid.Column="0" 
+                VerticalAlignment="Top"
+                Margin="0, 20, 0, 0"
+                Height="20" 
+                Width="60"
+                Click="FolderUp_Click">
+                <TextBlock Text="Folder up" />
+            </Button>
+            <Button 
+                x:Name="saveAllFilesInFolder" 
+                Grid.Column="0" 
+                VerticalAlignment="Bottom"
+                Margin="0, 0, 0, 20"
+                Height="20" 
+                Width="60"
+                Click="DownloadAll_Click">
+                <TextBlock Text="Save all" />
+            </Button>
+            <ScrollViewer Grid.Column="1">
+                <ListView x:Name="elementsInFolder" ItemsSource="{Binding ElementsInFolder}">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <EventSetter Event="MouseDoubleClick" Handler="HandleDouble_Click"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </ScrollViewer>
+        </Grid>
+        <Grid Margin="5, 35, 0, 5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Folder to which download:" Grid.Column="0" Margin="25, 0, 0, 0"></TextBlock>
+            <TextBox Name="downloadTo" Text="{Binding Path=DownloadPath, TargetNullValue='E:\\', UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Background="LightYellow" Margin="0, 0, 25, 0"></TextBox>
+        </Grid>
+        <TextBlock Text="Downloads information" HorizontalAlignment="Center"/>
+        <ScrollViewer>
+            <ListView 
+                x:Name="downloadsInfo" 
+                ItemsSource="{Binding DownloadsInfo}" 
+                Height="115" 
+                Margin="10, 0, 5 , 0">
+            </ListView>
+        </ScrollViewer>
+    </StackPanel>
+</Window>
