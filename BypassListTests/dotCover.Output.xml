@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Root CoveredStatements="136" TotalStatements="151" CoveragePercent="90" ReportType="Xml" DotCoverVersion="2021.1">
+  <Assembly Name="BypassList" CoveredStatements="83" TotalStatements="92" CoveragePercent="90">
+    <Namespace Name="BypassList" CoveredStatements="83" TotalStatements="92" CoveragePercent="90">
+      <Type Name="BypassList" CoveredStatements="56" TotalStatements="61" CoveragePercent="92">
+        <Constructor Name="BypassList(Dictionary&lt;int,IRule&gt;)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" />
+        <Method Name="BypassListCreator(Dictionary&lt;int,IRule&gt;):BypassList" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" />
+        <Method Name="CheckDepartmentsIndexesAreCorrect(Dictionary&lt;int,IRule&gt;):bool" CoveredStatements="6" TotalStatements="8" CoveragePercent="75">
+          <OwnCoverage CoveredStatements="5" TotalStatements="7" CoveragePercent="71" />
+          <AnonymousMethod Name="(int):bool" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" />
+        </Method>
+        <Method Name="RunBypass():void" CoveredStatements="13" TotalStatements="13" CoveragePercent="100" />
+        <Method Name="SetDepartmentState(int):void" CoveredStatements="15" TotalStatements="18" CoveragePercent="83" />
+        <Method Name="UncrossedSeals(int):ValueTuple&lt;bool,List&lt;HashSet&lt;int&gt;&gt;&gt;" CoveredStatements="14" TotalStatements="14" CoveragePercent="100" />
+      </Type>
+      <Type Name="ConditionalRule" CoveredStatements="16" TotalStatements="20" CoveragePercent="80">
+        <Constructor Name="ConditionalRule(int,int,int,int,int,int,int)" CoveredStatements="10" TotalStatements="10" CoveragePercent="100" />
+        <Method Name="Next(HashSet&lt;int&gt;):int" CoveredStatements="6" TotalStatements="10" CoveragePercent="60" />
+      </Type>
+      <Type Name="UnconditionalRule" CoveredStatements="11" TotalStatements="11" CoveragePercent="100">
+        <Constructor Name="UnconditionalRule(int,int,int)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" />
+        <Method Name="Next(HashSet&lt;int&gt;):int" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" />
+      </Type>
+    </Namespace>
+  </Assembly>
+  <Assembly Name="BypassListTests" CoveredStatements="53" TotalStatements="59" CoveragePercent="90">
+    <Namespace Name="BypassListTests" CoveredStatements="53" TotalStatements="59" CoveragePercent="90">
+      <Type Name="BypassListTests" CoveredStatements="53" TotalStatements="59" CoveragePercent="90">
+        <Constructor Name="BypassListTests()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" />
+        <Method Name="CheckPairsAreTheSame(ValueTuple&lt;bool,List&lt;HashSet&lt;int&gt;&gt;&gt;,ValueTuple&lt;bool,List&lt;HashSet&lt;int&gt;&gt;&gt;):bool" CoveredStatements="16" TotalStatements="22" CoveragePercent="73">
+          <OwnCoverage CoveredStatements="15" TotalStatements="21" CoveragePercent="71" />
+          <AnonymousMethod Name="(HashSet&lt;int&gt;):bool" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" />
+        </Method>
+        <Method Name="MultithreadedTest(Dictionary&lt;int,IRule&gt;,int,ValueTuple&lt;bool,List&lt;HashSet&lt;int&gt;&gt;&gt;):void" CoveredStatements="29" TotalStatements="29" CoveragePercent="100">
+          <OwnCoverage CoveredStatements="25" TotalStatements="25" CoveragePercent="100" />
+          <AnonymousMethod Name="():void" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" />
+        </Method>
+        <Method Name="OneThreadedTest(Dictionary&lt;int,IRule&gt;,int,ValueTuple&lt;bool,List&lt;HashSet&lt;int&gt;&gt;&gt;):void" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" />
+      </Type>
+    </Namespace>
+  </Assembly>
+</Root>
