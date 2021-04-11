@@ -12,7 +12,7 @@ namespace BypassListTests
     [TestFixture]
     public class BypassListTests
     {
-        private readonly int threadsCount = 100;
+        private const int ThreadsCount = 100;
 
         /// <summary>
         /// Tests for the BypassList (one threaded tests).
@@ -54,7 +54,7 @@ namespace BypassListTests
             var bypass = BypassList.BypassList.BypassListCreator(departments);
             Assert.NotNull(bypass);
 
-            for (var i = 0; i < threadsCount; ++i)
+            for (var i = 0; i < ThreadsCount; ++i)
             {
                 threads.Add(new Thread(() =>
                 {
@@ -128,6 +128,54 @@ namespace BypassListTests
                     [-1] = new ConditionalRule(1, 2, 3, 2, 2, 1, 1),
                     [1] = new UnconditionalRule(2, 2, 1),
                     [0] = new UnconditionalRule(2, 2, 1)
+                }
+            },
+
+            new object[]
+            {
+                new Dictionary<int, IRule>
+                {
+                    [1] = new UnconditionalRule(1, -3, 2),
+                    [2] = new UnconditionalRule(2, 3, 1)
+                }
+            },
+
+            new object[]
+            {
+                new Dictionary<int, IRule>
+                {
+                    [1] = new UnconditionalRule(1, 5, -1),
+                    [2] = new UnconditionalRule(2, 3, 4)
+                }
+            },
+
+            new object[]
+            {
+                new Dictionary<int, IRule>
+                {
+                    [1] = new ConditionalRule(3, -1, 2, 2, 4, 7, 3),
+                    [2] = new UnconditionalRule(1, 2, 1),
+                    [3] = new ConditionalRule(2, 2, 3, 1, 4, 5, 1)
+                }
+            },
+
+            new object[]
+            {
+                new Dictionary<int, IRule>
+                {
+                    [1] = new ConditionalRule(3, 1, 2, 2, 4, 7, 3),
+                    [2] = new UnconditionalRule(1, 2, 9),
+                    [3] = new ConditionalRule(2, 2, 3, 1, 4, 5, 1)
+                }
+            },
+
+            new object[]
+            {
+                new Dictionary<int, IRule>
+                {
+                    [1] = new ConditionalRule(3, 1, 2, 99, 4, 7, 3),
+                    [2] = new UnconditionalRule(1, 2, 9),
+                    [3] = new ConditionalRule(2, 2, 3, 1, 4, 5, 1)
                 }
             }
         };
@@ -334,7 +382,17 @@ namespace BypassListTests
         /// </summary>
         private static readonly object[] MixedRulesComplexTestCases =
         {
-
-        }
+            new object[]
+            {
+                new Dictionary<int, IRule>
+                {
+                    [1] = new ConditionalRule(3, 1, 2, 2, 4, 7, 3),
+                    [2] = new UnconditionalRule(1, 2, 1),
+                    [3] = new ConditionalRule(2, 2, 3, 1, 4, 5, 1)
+                },
+                2,
+                (false, (List<HashSet<int>>?) null)
+            },
+        };
     }
 }

@@ -30,9 +30,12 @@ namespace BypassList
 
         /// <summary>
         /// Creates an instance of the <see cref="BypassList"/> class.
+        /// The dictionary should contain more than 2 departments indexed from 1 to dictionary's size.
+        /// Seals in the rules could not be less than 1.
+        /// The departments should refer to the departments with the correct indexes.
         /// </summary>
         public static BypassList? BypassListCreator(Dictionary<int, IRule> departments) =>
-                !CheckDepartmentsIndexesAreCorrect(departments) ? null : new BypassList(departments);
+                !CheckDepartmentsAreValid(departments) ? null : new BypassList(departments);
 
         /// <summary>
         /// Returns the uncrossed seals after the user leaves the corresponding department.
@@ -66,7 +69,7 @@ namespace BypassList
         }
 
         /// <summary>
-        /// Runs the bypass of the departments.
+        /// Runs the departments' bypass.
         /// </summary>
         private void RunBypass()
         {
@@ -126,9 +129,9 @@ namespace BypassList
         }
 
         /// <summary>
-        /// Checks if the departments' indexes are correct.
+        /// Checks if the departments are valid.
         /// </summary>
-        private static bool CheckDepartmentsIndexesAreCorrect(Dictionary<int, IRule> departments)
+        private static bool CheckDepartmentsAreValid(Dictionary<int, IRule> departments)
         {
             if (departments.Count < 2)
             {
@@ -136,6 +139,44 @@ namespace BypassList
             }
 
             var indexes = departments.Keys;
+
+            foreach (var (departmentIndex, rule) in departments)
+            {
+                switch (rule)
+                {
+                    case UnconditionalRule unconditionalRule when departmentIndex != indexes.Count &&
+                                                                  (unconditionalRule.NextDepartment < 1 || unconditionalRule.NextDepartment > indexes.Count):
+                        return false;
+
+                    case UnconditionalRule unconditionalRule when unconditionalRule.ToSeal < 1 || unconditionalRule.ToCrossOut < 1:
+                        return false;
+
+                    case ConditionalRule conditionalRule:
+                    {
+                        var invalidNextDepartment = conditionalRule.NextDepartmentIfCheckedContains < 1 ||
+                                                    conditionalRule.NextDepartmentIfCheckedContains > indexes.Count ||
+                                                    conditionalRule.NextDepartmentIfCheckedDoesNotContain < 1 ||
+                                                    conditionalRule.NextDepartmentIfCheckedDoesNotContain > indexes.Count;
+
+                        var invalidSeal = conditionalRule.ToSealIfCheckedContains < 1 ||
+                                          conditionalRule.ToCrossOutIfCheckedDoesNotContain < 1 ||
+                                          conditionalRule.ToCrossOutIfCheckedContains < 1 ||
+                                          conditionalRule.ToCrossOutIfCheckedDoesNotContain < 1;
+
+                        if (departmentIndex != indexes.Count && invalidNextDepartment)
+                        {
+                            return false;
+                        }
+
+                        if (invalidSeal)
+                        {
+                            return false;
+                        }
+
+                        break;
+                    }
+                }
+            }
 
             return indexes.All(index => index >= 1 && index <= indexes.Count);
         }
