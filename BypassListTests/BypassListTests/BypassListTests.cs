@@ -7,7 +7,7 @@ using System.Threading;
 namespace BypassListTests
 {
     /// <summary>
-    /// Class is to test BypassList class.
+    /// The class is for testing BypassList class.
     /// </summary>
     [TestFixture]
     public class BypassListTests
@@ -115,7 +115,7 @@ namespace BypassListTests
         }
 
         /// <summary>
-        /// Data for the invalid format tests when the bypass list has not been created.
+        /// Test cases for the invalid format when the bypass list has not been created.
         /// </summary>
         private static readonly object[] InvalidFormatBypassListNotCreatedTestCases =
         {

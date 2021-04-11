@@ -31,8 +31,8 @@ namespace BypassList
         /// <summary>
         /// Creates an instance of the <see cref="BypassList"/> class.
         /// The dictionary should contain more than 2 departments indexed from 1 to dictionary's size.
-        /// Seals in the rules could not be less than 1.
-        /// The departments should refer to the departments with the correct indexes.
+        /// Seals' indexes in the rules could not be less than 1.
+        /// Departments should refer to the departments with the correct indexes.
         /// </summary>
         public static BypassList? BypassListCreator(Dictionary<int, IRule> departments) =>
                 !CheckDepartmentsAreValid(departments) ? null : new BypassList(departments);
@@ -43,7 +43,7 @@ namespace BypassList
         /// <returns>Returns pair.
         /// If the first element of the pair is true then the bypass contains a loop.
         /// The second element is seals if the department has been visited or null otherwise.
-        /// If both of elements are nulls then the department does not exist in the bypass list. </returns>
+        /// If both of the elements are nulls then the department does not exist in the bypass list. </returns>
         public (bool?, List<HashSet<int>>?) UncrossedSeals(int departmentToExit)
         {
             if (departmentToExit < 1 || departmentToExit > departments.Count)
