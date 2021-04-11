@@ -33,18 +33,18 @@ namespace BypassList
         /// <summary>
         /// Seals and returns the index of the next department.
         /// </summary>
-        public int Next(HashSet<int> seales)
+        public int Next(HashSet<int> seals)
         {
-            if (seales.Contains(toCheck))
+            if (seals.Contains(toCheck))
             {
-                seales.Add(toSealIfCheckedContains);
-                seales.Remove(toCrossOutIfCheckedContains);
+                seals.Add(toSealIfCheckedContains);
+                seals.Remove(toCrossOutIfCheckedContains);
 
                 return nextDepartmentIfCheckedContains;
             }
 
-            seales.Add(toSealIfCheckedDoesNotContain);
-            seales.Remove(toCrossOutIfCheckedDoesNotContain);
+            seals.Add(toSealIfCheckedDoesNotContain);
+            seals.Remove(toCrossOutIfCheckedDoesNotContain);
 
             return nextDepartmentIfCheckedDoesNotContain;
         }

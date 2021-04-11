@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
@@ -36,10 +37,17 @@ namespace BypassList
         /// <summary>
         /// Returns the uncrossed seals after the user leaves the corresponding department.
         /// </summary>
-        /// <returns>Returns pair. If the first element of the pair is true then the bypass contains a loop.
-        /// The second element is seals if department was visited or null otherwise.</returns>
-        public (bool, List<HashSet<int>>?) UncrossedSeals(int departmentToExit)
+        /// <returns>Returns pair.
+        /// If the first element of the pair is true then the bypass contains a loop.
+        /// The second element is seals if the department has been visited or null otherwise.
+        /// If both of elements are nulls then the department does not exist in the bypass list. </returns>
+        public (bool?, List<HashSet<int>>?) UncrossedSeals(int departmentToExit)
         {
+            if (departmentToExit > departments.Count)
+            {
+                return (null, null);
+            }
+
             if (!Volatile.Read(ref bypassIsDone))
             {
                 lock (locker)
@@ -62,48 +70,64 @@ namespace BypassList
         /// </summary>
         private void RunBypass()
         {
-            var departmentIndex = 1;
+            var nextDepartmentIndex = 1;
+            int departmentIndex;
 
-            while (departmentIndex != departments.Count)
+            do
             {
-                SetDepartmentState(departmentIndex);
+                departmentIndex = nextDepartmentIndex;
+
+                nextDepartmentIndex = SetDepartmentState(departmentIndex);
 
                 if (containsLoop)
                 {
                     return;
                 }
-
-                departmentIndex = departments[departmentIndex].Next(seals);
             }
+            while (departmentIndex != departments.Count);
 
-            SetDepartmentState(departmentIndex);
             containsLoop = false;
         }
 
-        private void SetDepartmentState(int departmentIndex)
+        /// <summary>
+        /// Adds the department state to the HashSet if it is new.
+        /// </summary>
+        private int SetDepartmentState(int departmentIndex)
         {
-            var department = departments[departmentIndex];
-            department.Next(seals);
+            var department = departments.GetValueOrDefault(departmentIndex);
+
+            if (department == null)
+            {
+                throw new NullReferenceException($"Department at the {departmentIndex} position" +
+                        "was null!");
+            }
+
+            var nextDepartment = department.Next(seals);
 
             if (departmentsStates.ContainsKey(departmentIndex))
             {
-                if (departmentsStates[departmentIndex].Contains(seals))
+                if (departmentsStates[departmentIndex].Exists(x => x.SetEquals(seals)))
                 {
                     containsLoop = true;
                 }
                 else
                 {
-                    departmentsStates[departmentIndex].Add(seals);
+                    departmentsStates[departmentIndex].Add(new HashSet<int>(seals));
                 }
             }
             else
             {
-                var departmentState = new List<HashSet<int>> { seals };
+                var departmentState = new List<HashSet<int>> { new (seals) };
 
                 departmentsStates.Add(departmentIndex, departmentState);
             }
+
+            return nextDepartment;
         }
 
+        /// <summary>
+        /// Checks if the departments' indexes are correct.
+        /// </summary>
         private static bool CheckDepartmentsIndexesAreCorrect(Dictionary<int, IRule> departments)
         {
             if (departments.Count < 2)

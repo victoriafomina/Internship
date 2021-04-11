@@ -22,12 +22,12 @@ namespace BypassList
         }
 
         /// <summary>
-        /// Seales and returns the index of the next department.
+        /// Seals and returns the index of the next department.
         /// </summary>
-        public int Next(HashSet<int> seales)
+        public int Next(HashSet<int> seals)
         {
-            seales.Add(toSeal);
-            seales.Remove(toCrossOut);
+            seals.Add(toSeal);
+            seals.Remove(toCrossOut);
 
             return nextDepartment;
         }
