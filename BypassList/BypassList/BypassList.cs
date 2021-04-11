@@ -99,13 +99,7 @@ namespace BypassList
         {
             var department = departments.GetValueOrDefault(departmentIndex);
 
-            if (department == null)
-            {
-                throw new NullReferenceException($"Department at the {departmentIndex} position" +
-                        "was null!");
-            }
-
-            var nextDepartment = department.Next(seals);
+            var nextDepartment = department!.Next(seals);
 
             if (departmentsStates.ContainsKey(departmentIndex))
             {
@@ -175,6 +169,9 @@ namespace BypassList
 
                         break;
                     }
+
+                    default:
+                        throw new InvalidOperationException("Unexpected IRule implementation!");
                 }
             }
 
