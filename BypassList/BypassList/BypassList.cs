@@ -46,7 +46,7 @@ namespace BypassList
         /// If both of elements are nulls then the department does not exist in the bypass list. </returns>
         public (bool?, List<HashSet<int>>?) UncrossedSeals(int departmentToExit)
         {
-            if (departmentToExit > departments.Count)
+            if (departmentToExit < 1 || departmentToExit > departments.Count)
             {
                 return (null, null);
             }

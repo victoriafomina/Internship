@@ -20,15 +20,16 @@ namespace BypassListTests
         [TestCaseSource(nameof(UnconditionalRuleSimpleTestCases))]
         [TestCaseSource(nameof(UnconditionalRuleComplexTestCases))]
         [TestCaseSource(nameof(MixedRulesSimpleTestCases))]
+        [TestCaseSource(nameof(MixedRulesComplexTestCases))]
         public void ValidFormatOneThreadedTest(Dictionary<int, IRule> departments, int departmentIndex,
-                (bool, List<HashSet<int>>?) seals)
+                (bool, List<HashSet<int>>?) sealsExpected)
         {
             var bypass = BypassList.BypassList.BypassListCreator(departments);
             Assert.NotNull(bypass);
 
-            var sealsResult = bypass.UncrossedSeals(departmentIndex);
+            var sealsActual = bypass.UncrossedSeals(departmentIndex);
 
-            Assert.IsTrue(CheckPairsAreTheSame(seals, sealsResult));
+            Assert.IsTrue(CheckPairsAreTheSame(sealsExpected, sealsActual));
         }
 
         /// <summary>
@@ -42,11 +43,26 @@ namespace BypassListTests
         }
 
         /// <summary>
+        /// Tests in which exit department parameter is invalid (one threaded test).
+        /// </summary>
+        [TestCaseSource(nameof(InvalidDepartmentToExitParameterTestsCases))]
+        public void InvalidFormatDepartmentToExitParameterTest(Dictionary<int, IRule> departments, int departmentToExit)
+        {
+            var bypass = BypassList.BypassList.BypassListCreator(departments);
+            Assert.IsNotNull(bypass);
+
+            var (containsLoop, seals) = bypass.UncrossedSeals(departmentToExit);
+            Assert.IsNull(containsLoop);
+            Assert.IsNull(seals);
+        }
+
+        /// <summary>
         /// Tests for the BypassList (multithreaded tests).
         /// </summary>
         [TestCaseSource(nameof(UnconditionalRuleSimpleTestCases))]
         [TestCaseSource(nameof(UnconditionalRuleComplexTestCases))]
         [TestCaseSource(nameof(MixedRulesSimpleTestCases))]
+        [TestCaseSource(nameof(MixedRulesComplexTestCases))]
         public void ValidFormatMultithreadedTest(Dictionary<int, IRule> departments, int departmentIndex,
                 (bool, List<HashSet<int>>?) seals)
         {
@@ -99,7 +115,7 @@ namespace BypassListTests
         }
 
         /// <summary>
-        /// Test cases for the invalid format when the bypass list has not been created.
+        /// Data for the invalid format tests when the bypass list has not been created.
         /// </summary>
         private static readonly object[] InvalidFormatBypassListNotCreatedTestCases =
         {
@@ -181,6 +197,32 @@ namespace BypassListTests
         };
 
         /// <summary>
+        /// Data with the invalid parameter (exit department) for the query checking the uncrossed seals after the bypass.
+        /// </summary>
+        private static readonly object[] InvalidDepartmentToExitParameterTestsCases =
+        {
+            new object[]
+            {
+                new Dictionary<int, IRule>
+                {
+                    [1] = new UnconditionalRule(1, 2, 2),
+                    [2] = new UnconditionalRule(2, 2, 1)
+                },
+                5
+            },
+
+            new object[]
+            {
+                new Dictionary<int, IRule>
+                {
+                    [1] = new UnconditionalRule(1, 2, 2),
+                    [2] = new UnconditionalRule(2, 2, 1)
+                },
+                0
+            }
+        };
+
+        /// <summary>
         /// Simple test cases for the unconditional rule.
         /// </summary>
         private static readonly object[] UnconditionalRuleSimpleTestCases =
@@ -194,6 +236,17 @@ namespace BypassListTests
                 },
                 1,
                 (false, new List<HashSet<int>> { new() { 1 } })
+            },
+
+            new object[]
+            {
+                new Dictionary<int, IRule>
+                {
+                    [1] = new UnconditionalRule(1, 1, 2),
+                    [2] = new UnconditionalRule(2, 2, 1)
+                },
+                1,
+                (false, new List<HashSet<int>> { new() })
             },
 
             new object[]
@@ -393,6 +446,46 @@ namespace BypassListTests
                 2,
                 (false, (List<HashSet<int>>?) null)
             },
+
+            new object[]
+            {
+                new Dictionary<int, IRule>
+                {
+                    [1] = new ConditionalRule(3, 1, 2, 2, 4, 7, 3),
+                    [2] = new UnconditionalRule(1, 2, 1),
+                    [3] = new ConditionalRule(2, 2, 3, 1, 4, 5, 1)
+                },
+                2,
+                (false, (List<HashSet<int>>?) null)
+            },
+
+            new object[]
+            {
+                new Dictionary<int, IRule>
+                {
+                    [1] = new UnconditionalRule(1, 3, 2),
+                    [2] = new ConditionalRule(1, 4, 2, 3, 5, 1, 4),
+                    [3] = new ConditionalRule(1, 2, 6, 1, 3, 7, 5),
+                    [4] = new UnconditionalRule(2, 3, 5),
+                    [5] = new UnconditionalRule(3, 5, 1)
+                },
+                1,
+                (true, new List<HashSet<int>> { new() { 1 }, new() { 1, 2, 4 } })
+            },
+
+            new object[]
+            {
+                new Dictionary<int, IRule>
+                {
+                    [1] = new UnconditionalRule(1, 3, 2),
+                    [2] = new ConditionalRule(1, 4, 2, 3, 5, 1, 4),
+                    [3] = new ConditionalRule(1, 2, 6, 1, 3, 7, 5),
+                    [4] = new UnconditionalRule(2, 3, 5),
+                    [5] = new UnconditionalRule(3, 5, 1)
+                },
+                4,
+                (true, (List<HashSet<int>>?) null)
+            }
         };
     }
 }
