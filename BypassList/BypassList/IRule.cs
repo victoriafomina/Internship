@@ -10,6 +10,6 @@ namespace BypassList
         /// <summary>
         /// Seals and returns the index of the next department.
         /// </summary>
-        public int Next(HashSet<int> seales);
+        public int Next(HashSet<int> seals);
     }
 }
